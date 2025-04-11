@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Ajouter une permission') }}
             </h2>
-            <a href="{{ route('permissions.index') }}" class="bg-white text-sm rounded-md px-3 py-3">
+            <a href="{{ route('permissions.index') }}" class="bg-white text-sm rounded-md px-3 py-3 transform transition-transform duration-300 ease-in-out hover:scale-105">
                 Retour
             </a>
         </div>
@@ -22,7 +22,7 @@
                             <div class="my-3">
                                 <input type="text" name="name" value="{{ old('name') }}" placeholder="Entrer le nom de la permission" class="text-black border-gray-300 shadow-sm w-1/2 rounded-lg">
                                 @error('name')
-                                    <p class="text-red-500 font-medium">{{ $message }}</p>
+                                <p class="text-red-500 font-medium">{{ $message }}</p>
                                 @enderror
                             </div>
 

@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +26,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/permissions/edit/{id}', [PermissionController::class, 'edit'])->name('permissions.edit');
     Route::put('/permissions/update/{id}', [PermissionController::class, 'update'])->name('permissions.update');
     Route::delete('/permissions/destroy', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+
+    //Routes pour les roles
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('/roles/store', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('/roles/edit/{id}', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/roles/update/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/roles/destroy', [RoleController::class, 'destroy'])->name('roles.destroy');
+
+    //Routes pour les articles
+    Route::resource('articles', ArticleController::class);
 
 });
 

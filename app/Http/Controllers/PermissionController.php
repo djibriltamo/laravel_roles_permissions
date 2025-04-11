@@ -83,7 +83,7 @@ class PermissionController extends Controller
 
         $permission->delete();
 
-        session()->flash('success', 'Permission supprimée avec succès');
+        session()->flash('danger', 'Permission supprimée avec succès');
             return response()->json([
                 'status' => true,
                 'message' => 'Suppression de la permission !'

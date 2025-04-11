@@ -1,11 +1,17 @@
 @if (Session::has('success'))
-    <div class="bg-green-200 border-green-600 p-4 mb-3 rounded-sm shadow-sm">
-        {{ Session::get('success') }}
-    </div>
+<div class="bg-green-200 border-green-600 p-4 mb-3 rounded-sm shadow-sm">
+    {{ Session::get('success') }}
+</div>
 @endif
 
 @if (Session::has('error'))
-    <div class="bg-danger-200 border-danger-600 p-4 mb-3 rounded-sm shadow-sm">
-        {{ Session::get('error') }}
-    </div>
+<div class="bg-danger-200 border-danger-600 p-4 mb-3 rounded-sm shadow-sm">
+    {{ Session::get('error') }}
+</div>
+@endif
+
+@if (Session::has('danger'))
+<div class="bg-danger-200 border-danger-600 p-4 mb-3 rounded-sm shadow-sm">
+    {{ Session::get('danger') }}
+</div>
 @endif
