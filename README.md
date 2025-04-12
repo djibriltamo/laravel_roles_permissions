@@ -1,12 +1,11 @@
-# 🎯 Gestion des rôles et permissions avec Spatie dans Laravel
+🎯 Gestion des rôles et permissions avec Spatie dans Laravel
 
 Ce projet utilise le package [Spatie Laravel Permission](https://spatie.be/docs/laravel-permission) pour gérer les **rôles** et **permissions** des utilisateurs dans une application Laravel.
 
 ---
 
-## ✅ Installation du package
+✅ Installation du package
 
-```bash
 composer require spatie/laravel-permission
 
 📦 Publier les fichiers de configuration et de migration
@@ -24,7 +23,7 @@ class User extends Authenticatable
     use HasRoles;
 }
 
-Ajoute ceci dans app.php dans le dossier bootstrap qui sont les alias des middlewares
+📌 Ajoute ceci dans app.php dans le dossier bootstrap qui sont les alias des middlewares
 
 ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
@@ -33,14 +32,15 @@ Ajoute ceci dans app.php dans le dossier bootstrap qui sont les alias des middle
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
-Importer les ensuites dans votre contrôleur
+    
+📚 Importer ceci dans votre contrôleur
 
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
 ensuite ajouter cet interface sur ce contrôleur : class UserController extends Controller implements HasMiddleware
 
-et ensuite ajouter cette méthode avec les permissions quevos aurez crées :
+et ensuite ajouter cette méthode avec les permissions que vous aurez crées :
 public static function middleware(): array
     {
         return [
@@ -74,26 +74,28 @@ $user->assignRole('admin');
 $user->givePermissionTo('edit articles');
 
 🔒 Bloquer des accès avec @can dans les vues Blade
- *** Si vous voulez bloquer en utilisant les permissions
+ Si vous voulez bloquer en utilisant les permissions
     @can('edit articles')
       <a href="/edit">Modifier l'article</a>
     @endcan
-  *** Si voulez bloquez en utilisant les rôles
+  Si voulez bloquez en utilisant les rôles
     @role('admin')
       <a href="/admin">Admin Panel</a>
     @endrole
-
     @hasanyrole('admin|moderator')
       <a href="/moderation">Espace Modération</a>
     @endhasanyrole
 
 🧪 Vérification dans le code (contrôleur, service...)
-
-    if ($user->can('delete articles')) {
+if ($user->can('delete articles')) {
     // faire quelque chose
-    }
-    
-    if ($user->hasRole('admin')) {
+}
+if ($user->hasRole('admin')) {
         // faire autre chose
-    }
+}
+
+
+📢 Auteur : Djibril Tamo
+📅 Date : 12 Avril 2025
+🌟 Licence : Publique
 
