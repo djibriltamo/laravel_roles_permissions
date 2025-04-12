@@ -6,9 +6,20 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:voir users', only: ['index']),
+            new Middleware('permission:ajouter users', only: ['create']),
+            //new Middleware('permission:editer users', only: ['edit']),
+            //new Middleware('permission:supprimer users', only: ['destroy']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */

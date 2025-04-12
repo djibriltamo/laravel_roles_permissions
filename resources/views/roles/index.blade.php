@@ -4,9 +4,11 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Liste des rôles') }}
             </h2>
+            @can('ajouter roles')
             <a href="{{ route('roles.create') }}" class="bg-white text-sm rounded-md px-3 py-3 transform transition-transform duration-300 ease-in-out hover:scale-105">
                 Ajouter un rôle
             </a>
+            @endcan
         </div>
     </x-slot>
 
@@ -42,15 +44,21 @@
                             {{ \Carbon\Carbon::parse($role->created_at)->format('d M, Y') }}
                         </td>
                         <td class="px-6 py-3 text-center">
+                            @can('editer roles')
                             <a href="{{ route('roles.edit', $role->id) }}"
                                 class="bg-green-700 text-sm rounded-md text-white px-3 py-2 hover:bg-green-500">
                                 Modifier
                             </a>
+                            @endcan
+
+                            @can('supprimer roles')
                             <a href="javascript:void(0)"
                                 onclick="deleteRole({{ $role->id }})"
                                 class="bg-red-700 text-sm rounded-md text-white px-3 py-2 hover:bg-red-500">
                                 Supprimer
                             </a>
+                            @endcan
+
                         </td>
                     </tr>
 
