@@ -19,11 +19,16 @@ class PermissionController extends Controller implements HasMiddleware
             new Middleware('permission:supprimer permissions', only: ['destroy']),
         ];
     }
-    public function index()
+    public function index(Request $request)
     {
-        $permissions = Permission::orderBy('created_at', 'DESC')->paginate(10);
+        if($request->filled('search'))
+        {
+            $permissions = Permission::search($request->search)->paginate(10);
+        }else{
+            $permissions = Permission::orderBy('created_at', 'DESC')->paginate(10);
+        }
 
-        return view('permissions.list', compact('permissions'));
+        return view('permissions.list', compact('permissions', 'request'));
     }
 
     public function create()

@@ -58,7 +58,7 @@
                             @can('supprimer articles')
                             <a href="javascript:void(0)"
                                 onclick="deleteArticle({{ $article->id }})"
-                                class="bg-red-700 text-sm rounded-md text-white px-3 py-2 hover:bg-red-500">
+                                class="bg-red-700 text-sm rounded-md text-white px-3 py-2 ml-2 hover:bg-red-500">
                                 Supprimer
                             </a>
                             @endcan
