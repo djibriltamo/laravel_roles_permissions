@@ -16,6 +16,17 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-message></x-message>
 
+            <!-- Barre de recherche -->
+            <form action="{{ route('permissions.index') }}" method="get">
+                <div class="mb-4 flex items-center">
+                    <input type="text" id="search-input" name="search" placeholder="Rechercher une permission..."
+                        class="border border-gray-300 rounded-md px-4 py-2 w-full" value="{{ $request->get('search') }}"/>
+                    <button type="submit" class="bg-blue-500 text-white rounded-md px-4 py-2 ml-2 hover:bg-blue-600">
+                        Rechercher
+                    </button>
+                </div>
+            </form>
+
             <table class="w-full">
                 <thead class="bg-gray-50">
                     <tr class="border-b">
@@ -50,7 +61,7 @@
                             @can('supprimer permissions')
                             <a href="javascript:void(0)"
                                 onclick="deletePermission({{ $permission->id }})"
-                                class="bg-red-700 text-sm rounded-md text-white px-3 py-2 hover:bg-red-500">
+                                class="bg-red-700 text-sm rounded-md text-white px-3 py-2 ml-2 hover:bg-red-500">
                                 Supprimer
                             </a>
                             @endcan
