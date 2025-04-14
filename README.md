@@ -1,66 +1,101 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+🎯 Gestion des rôles et permissions avec Spatie dans Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Ce projet utilise le package [Spatie Laravel Permission](https://spatie.be/docs/laravel-permission) pour gérer les **rôles** et **permissions** des utilisateurs dans une application Laravel.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+✅ Installation du package
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+composer require spatie/laravel-permission
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+📦 Publier les fichiers de configuration et de migration
 
-## Learning Laravel
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+php artisan migrate
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+🧠 Configuration du modèle User
+Ajoute le trait HasRoles dans ton modèle User :
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+use Spatie\Permission\Traits\HasRoles;
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+class User extends Authenticatable
+{
+    use HasRoles;
+}
 
-## Laravel Sponsors
+📌 Ajoute ceci dans app.php dans le dossier bootstrap qui sont les alias des middlewares
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ]);
+    })
+    
+📚 Importer ceci dans votre contrôleur
 
-### Premium Partners
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+ensuite ajouter cet interface sur ce contrôleur : class UserController extends Controller implements HasMiddleware
 
-## Contributing
+et ensuite ajouter cette méthode avec les permissions que vous aurez crées :
+public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:voir users', only: ['index']),
+            new Middleware('permission:ajouter users', only: ['create']),
+            new Middleware('permission:editer users', only: ['edit']),
+            new Middleware('permission:supprimer users', only: ['destroy']),
+        ];
+    }
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+🔁 Attribuer des rôles et permissions
 
-## Code of Conduct
+Dans un seeder, un controlleur ou via Tinker :
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+// Créer un rôle
+$admin = Role::create(['name' => 'admin']);
 
-## Security Vulnerabilities
+// Créer une permission
+$permission = Permission::create(['name' => 'edit articles']);
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+// Associer la permission au rôle
+$admin->givePermissionTo($permission);
 
-## License
+// Associer un rôle à un utilisateur
+$user = User::find(1);
+$user->assignRole('admin');
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+// Donner une permission directement à un utilisateur
+$user->givePermissionTo('edit articles');
+
+🔒 Bloquer des accès avec @can dans les vues Blade
+ Si vous voulez bloquer en utilisant les permissions
+    @can('edit articles')
+      <a href="/edit">Modifier l'article</a>
+    @endcan
+  Si voulez bloquez en utilisant les rôles
+    @role('admin')
+      <a href="/admin">Admin Panel</a>
+    @endrole
+    @hasanyrole('admin|moderator')
+      <a href="/moderation">Espace Modération</a>
+    @endhasanyrole
+
+🧪 Vérification dans le code (contrôleur, service...)
+if ($user->can('delete articles')) {
+    // faire quelque chose
+}
+if ($user->hasRole('admin')) {
+        // faire autre chose
+}
+
+
+📢 Auteur : Djibril Tamo
+📅 Date : 12 Avril 2025
+🌟 Licence : Publique
+
