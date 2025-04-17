@@ -23,35 +23,6 @@ class User extends Authenticatable
     use HasRoles;
 }
 
-📌 Ajoute ceci dans app.php dans le dossier bootstrap qui sont les alias des middlewares
-
-->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias([
-            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-        ]);
-    })
-    
-📚 Importer ceci dans votre contrôleur
-
-use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Routing\Controllers\HasMiddleware;
-
-ensuite ajouter cet interface sur ce contrôleur : class UserController extends Controller implements HasMiddleware
-
-et ensuite ajouter cette méthode avec les permissions que vous aurez crées :
-
-public static function middleware(): array
-    {
-        return [     
-            new Middleware('permission:voir users', only: ['index']),
-            new Middleware('permission:ajouter users', only: ['create']),
-            new Middleware('permission:editer users', only: ['edit']),
-            new Middleware('permission:supprimer users', only: ['destroy']),
-        ];
-    }
-
 🔁 Attribuer des rôles et permissions
 
 Dans un seeder, un controlleur ou via Tinker :
