@@ -57,27 +57,22 @@ Dans un seeder, un controlleur ou via Tinker :
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-// Créer un rôle
 $admin = Role::create(['name' => 'admin']);
-
-// Créer une permission
 $permission = Permission::create(['name' => 'edit articles']);
-
-// Associer la permission au rôle
 $admin->givePermissionTo($permission);
 
-// Associer un rôle à un utilisateur
 $user = User::find(1);
 $user->assignRole('admin');
 
-// Donner une permission directement à un utilisateur
 $user->givePermissionTo('edit articles');
 
 🔒 Bloquer des accès avec @can dans les vues Blade
+
  Si vous voulez bloquer en utilisant les permissions
     @can('edit articles')
       <a href="/edit">Modifier l'article</a>
     @endcan
+    
   Si voulez bloquez en utilisant les rôles
     @role('admin')
       <a href="/admin">Admin Panel</a>
@@ -88,10 +83,10 @@ $user->givePermissionTo('edit articles');
 
 🧪 Vérification dans le code (contrôleur, service...)
 if ($user->can('delete articles')) {
-    // faire quelque chose
+    // code...
 }
 if ($user->hasRole('admin')) {
-        // faire autre chose
+    // code...
 }
 
 
