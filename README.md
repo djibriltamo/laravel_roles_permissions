@@ -41,9 +41,10 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 ensuite ajouter cet interface sur ce contrôleur : class UserController extends Controller implements HasMiddleware
 
 et ensuite ajouter cette méthode avec les permissions que vous aurez crées :
+
 public static function middleware(): array
     {
-        return [
+        return [     
             new Middleware('permission:voir users', only: ['index']),
             new Middleware('permission:ajouter users', only: ['create']),
             new Middleware('permission:editer users', only: ['edit']),
@@ -58,7 +59,9 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 $admin = Role::create(['name' => 'admin']);
+
 $permission = Permission::create(['name' => 'edit articles']);
+
 $admin->givePermissionTo($permission);
 
 $user = User::find(1);
@@ -91,6 +94,8 @@ if ($user->hasRole('admin')) {
 
 
 📢 Auteur : Djibril Tamo
+
 📅 Date : 12 Avril 2025
+
 🌟 Licence : Publique
 
